@@ -1,6 +1,6 @@
-package Repository;
+package repository;
 
-import Entity.Author;
+import entity.Author;
 
 import java.sql.*;
 
@@ -26,7 +26,7 @@ public class AuthorRepository {
     }
 
     public Author load(long id) throws SQLException {
-        String sql = "SELECT * FROM users WHERE id=?";
+        String sql = "SELECT * FROM authors WHERE id=?";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.setLong(1,id);
         ResultSet resultSet = preparedStatement.executeQuery();

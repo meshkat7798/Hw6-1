@@ -1,4 +1,4 @@
-package Entity;
+package entity;
 
 public class Book {
     private long Id;

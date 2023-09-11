@@ -1,7 +1,7 @@
-package Repository;
+package repository;
 
-import Entity.Author;
-import Entity.Book;
+import entity.Author;
+import entity.Book;
 
 import java.sql.*;
 
@@ -13,11 +13,11 @@ public class BookRepository {
         this.connection = connection;
     }
     public void save(Book book) throws SQLException {
-        String sql = "INSERT INTO books(title, author, published_year) values (?,?,?)";
+        String sql = "INSERT INTO books(title, author_id, published_year) values (?,?,?)";
         PreparedStatement preparedStatement =
                 connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
         preparedStatement.setString(1,book.getTitle());
-        preparedStatement.setObject(2,book.getAuthor());
+        preparedStatement.setLong(2,book.getAuthor().getId());
         preparedStatement.setInt(3, book.getPublishedYear());
         preparedStatement.executeUpdate();
         if (preparedStatement.getGeneratedKeys().next()){
@@ -34,7 +34,9 @@ public class BookRepository {
         if (resultSet.next()){
             book.setId(resultSet.getLong(1));
             book.setTitle(resultSet.getString(2));
-            book.setAuthor((Author) resultSet.getObject(3));
+            AuthorRepository authorRepository = new AuthorRepository(connection);
+            Author author = authorRepository.load(resultSet.getLong(3));
+            book.setAuthor(author);
             book.setPublishedYear(resultSet.getInt(4));
         }
         return book;
